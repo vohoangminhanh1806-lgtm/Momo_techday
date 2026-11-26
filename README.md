@@ -27,6 +27,7 @@ Người dùng ──hỏi──> AI đề xuất quỹ ──chọn──> MoMo
 | `contracts/deploy.py` | Script deploy lên Amoy |
 | `frontend/index.html` | Giao diện (1 file, không cần build) |
 | `tests/test_local.py` | Test toàn bộ luồng trên blockchain giả lập |
+| `render.yaml` | Cấu hình deploy lên Render |
 
 ---
 
@@ -46,6 +47,25 @@ uvicorn main:app --reload --port 8000
 Mở http://localhost:8000 rồi thử hỏi AI → Quyên góp → bấm "Xác nhận thanh toán" (giả lập) → xem tab "Minh bạch dòng tiền".
 
 Ba nhãn trên đầu trang cho biết hệ thống đang ở chế độ nào (MoMo thật hay giả lập, đã có blockchain chưa, AI là LLM hay từ khóa).
+
+---
+
+## 1b. Đưa web lên mạng để có link (Render, miễn phí)
+
+GitHub chỉ lưu code, không chạy được server Python. Để có link web mở trên điện thoại hay gửi cho ban giám khảo, deploy lên Render:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/vohoangminhanh1806-lgtm/Momo_techday)
+
+1. Bấm nút trên, rồi đăng nhập Render bằng tài khoản GitHub.
+2. Render đọc file `render.yaml` và hỏi các biến môi trường. Chưa có biến nào thì **để trống hết** rồi bấm **Apply**.
+3. Chờ khoảng 3–5 phút để build. Link web có dạng `https://momo-techday.onrender.com` (tên có thể khác nếu đã có người dùng tên này).
+4. Copy link đó vào ô **Website** của repo GitHub: bấm biểu tượng bánh răng ở mục About bên phải trang repo.
+
+Lưu ý về gói miễn phí:
+- Server tự "ngủ" sau khoảng 15 phút không ai truy cập. Lần mở đầu tiên sau đó mất khoảng 1 phút. **Trước giờ demo, mở link trước vài phút** để server thức dậy.
+- Dữ liệu giao dịch lưu trong file sẽ mất khi server khởi động lại. Riêng các bản ghi đã lên blockchain thì vẫn còn nguyên.
+- Muốn thêm khóa MoMo, ví blockchain hay API key AI: vào Render → service → **Environment**, thêm biến rồi bấm Save. Render sẽ tự deploy lại.
+- Trên Render **không cần ngrok**. Server tự dùng link Render làm địa chỉ nhận IPN từ MoMo.
 
 ---
 
@@ -93,7 +113,7 @@ Từ đây, mỗi khoản quyên góp thành công sẽ có link Polygonscan. V�
    MOMO_ACCESS_KEY=...
    MOMO_SECRET_KEY=...
    ```
-3. **IPN cần URL công khai.** MoMo gọi về server của bạn, mà `localhost` thì MoMo không gọi tới được. Tạo URL công khai bằng ngrok:
+3. **IPN cần URL công khai.** Nếu chạy trên Render (mục 1b) thì bỏ qua bước này. Nếu chạy trên máy cá nhân, MoMo không gọi tới `localhost` được, nên cần tạo URL công khai bằng ngrok:
    ```bash
    ngrok http 8000
    ```

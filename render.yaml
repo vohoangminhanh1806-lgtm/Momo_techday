@@ -1,0 +1,36 @@
+# Cấu hình deploy lên Render (https://render.com) — gói miễn phí.
+# Cách dùng: Render Dashboard → New → Blueprint → chọn repo này → Apply.
+services:
+  - type: web
+    name: momo-techday
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/status
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      # Bắt đầu ở chế độ giả lập; khi có khóa MoMo sandbox thì đổi thành "momo"
+      - key: PAYMENT_MODE
+        value: simulate
+      - key: ADMIN_TOKEN
+        generateValue: true
+      # Các biến dưới đây Render sẽ hỏi bạn khi tạo (để trống nếu chưa có)
+      - key: MOMO_PARTNER_CODE
+        sync: false
+      - key: MOMO_ACCESS_KEY
+        sync: false
+      - key: MOMO_SECRET_KEY
+        sync: false
+      - key: PRIVATE_KEY
+        sync: false
+      - key: CONTRACT_ADDRESS
+        sync: false
+      - key: LLM_BASE_URL
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        sync: false
