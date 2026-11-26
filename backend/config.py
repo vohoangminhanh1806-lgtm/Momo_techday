@@ -10,13 +10,17 @@ load_dotenv(BASE_DIR / ".env")
 
 
 def env(name: str, default: str = "") -> str:
-    return os.getenv(name, default).strip()
+    """Biến để trống ("") được coi như chưa đặt → dùng giá trị mặc định."""
+    v = (os.getenv(name) or "").strip()
+    return v or default
 
 
-# URL công khai của backend (ngrok). Dùng cho ipnUrl để MoMo gọi về.
-PUBLIC_BASE_URL = env("PUBLIC_BASE_URL", "http://localhost:8000").rstrip("/")
-# URL trình duyệt mở sau khi thanh toán xong (localhost vẫn chạy được).
-APP_BASE_URL = env("APP_BASE_URL", "http://localhost:8000").rstrip("/")
+# Khi chạy trên Render, Render tự cung cấp RENDER_EXTERNAL_URL (vd https://momo-techday.onrender.com)
+_DEFAULT_URL = env("RENDER_EXTERNAL_URL", "http://localhost:8000")
+# URL công khai của backend (Render hoặc ngrok). Dùng cho ipnUrl để MoMo gọi về.
+PUBLIC_BASE_URL = env("PUBLIC_BASE_URL", _DEFAULT_URL).rstrip("/")
+# URL trình duyệt mở sau khi thanh toán xong.
+APP_BASE_URL = env("APP_BASE_URL", _DEFAULT_URL).rstrip("/")
 
 # ---- MoMo ----
 MOMO_PARTNER_CODE = env("MOMO_PARTNER_CODE")
