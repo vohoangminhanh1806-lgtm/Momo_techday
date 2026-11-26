@@ -17,20 +17,8 @@ services:
         value: simulate
       - key: ADMIN_TOKEN
         generateValue: true
-      # Các biến dưới đây Render sẽ hỏi bạn khi tạo (để trống nếu chưa có)
-      - key: MOMO_PARTNER_CODE
-        sync: false
-      - key: MOMO_ACCESS_KEY
-        sync: false
-      - key: MOMO_SECRET_KEY
-        sync: false
-      - key: PRIVATE_KEY
-        sync: false
-      - key: CONTRACT_ADDRESS
-        sync: false
-      - key: LLM_BASE_URL
-        sync: false
-      - key: LLM_API_KEY
-        sync: false
-      - key: LLM_MODEL
-        sync: false
+      # Khóa MoMo, ví blockchain, API key AI: KHÔNG khai báo ở đây để form tạo Blueprint
+      # không bắt nhập. Khi có, thêm trong Render → service → Environment:
+      #   MOMO_PARTNER_CODE, MOMO_ACCESS_KEY, MOMO_SECRET_KEY (rồi đổi PAYMENT_MODE=momo)
+      #   PRIVATE_KEY, CONTRACT_ADDRESS
+      #   LLM_BASE_URL, LLM_API_KEY, LLM_MODEL

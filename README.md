@@ -57,7 +57,7 @@ GitHub chỉ lưu code, không chạy được server Python. Để có link web
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/vohoangminhanh1806-lgtm/Momo_techday)
 
 1. Bấm nút trên, rồi đăng nhập Render bằng tài khoản GitHub.
-2. Render đọc file `render.yaml` và hỏi các biến môi trường. Chưa có biến nào thì **để trống hết** rồi bấm **Apply**.
+2. Render đọc file `render.yaml`. Bấm **Deploy Blueprint** (không cần điền biến nào).
 3. Chờ khoảng 3–5 phút để build. Link web có dạng `https://momo-techday.onrender.com` (tên có thể khác nếu đã có người dùng tên này).
 4. Copy link đó vào ô **Website** của repo GitHub: bấm biểu tượng bánh răng ở mục About bên phải trang repo.
 
