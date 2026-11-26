@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kết Nối Thiện Nguyện – AI × MoMo × Blockchain</title>
+<style>
+  :root{--pink:#a50064;--pink2:#d82d8b;--bg:#fbf7fa;--ink:#1f1a1d;--mute:#6b6168;--line:#ece3e9;--ok:#0f7b4b;--warn:#b45309}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  header{background:linear-gradient(135deg,var(--pink),var(--pink2));color:#fff;padding:28px 20px 72px}
+  .wrap{max-width:1040px;margin:0 auto}
+  header h1{margin:0 0 6px;font-size:28px}
+  header p{margin:0;opacity:.9}
+  .badges{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+  .badge{background:#ffffff26;border:1px solid #ffffff40;border-radius:999px;padding:3px 12px;font-size:13px}
+  nav{display:flex;gap:6px;margin-top:-52px;margin-bottom:16px}
+  nav button{border:0;background:#ffffff30;color:#fff;padding:10px 18px;border-radius:10px 10px 0 0;font-size:15px;cursor:pointer}
+  nav button.on{background:var(--bg);color:var(--pink);font-weight:700}
+  main{padding:0 20px 60px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+  .ask{display:flex;gap:8px}
+  .ask input{flex:1;padding:14px 16px;border:1px solid var(--line);border-radius:10px;font-size:16px}
+  .btn{background:var(--pink);color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:15px;cursor:pointer;font-weight:600}
+  .btn.ghost{background:#fff;color:var(--pink);border:1px solid var(--pink)}
+  .btn:disabled{opacity:.5;cursor:wait}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .chip{background:#fdf2f8;color:var(--pink);border:1px solid #f5d0e6;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:14px}
+  .fund h3{margin:0 0 4px;font-size:17px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+  .tag{font-size:12px;background:#f4eff2;border-radius:6px;padding:2px 8px;color:var(--mute)}
+  .tag.ok{background:#e7f6ee;color:var(--ok)}
+  .tag.no{background:#fef3e2;color:var(--warn)}
+  .reason{background:#fdf2f8;border-left:3px solid var(--pink);padding:8px 10px;border-radius:6px;font-size:14px;margin:8px 0}
+  .mute{color:var(--mute);font-size:14px}
+  h2{font-size:20px;margin:26px 0 4px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--mute);font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  a{color:var(--pink)}
+  .modal{position:fixed;inset:0;background:#0006;display:none;place-items:center;padding:20px}
+  .modal.open{display:grid}
+  .modal .card{max-width:420px;width:100%}
+  .amounts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+  .amounts button{padding:10px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;font-size:15px}
+  .amounts button.on{border-color:var(--pink);color:var(--pink);font-weight:700}
+  .field{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font-size:16px}
+  .banner{border-radius:12px;padding:14px 16px;margin-bottom:14px}
+  .banner.ok{background:#e7f6ee;border:1px solid #b7e4cb}
+  .banner.wait{background:#fff8e6;border:1px solid #f5dea3}
+  .banner.err{background:#fdecec;border:1px solid #f5bcbc}
+  .summary{white-space:pre-wrap;font-size:14px;margin-top:8px}
+  .hide{display:none}
+  .sample{font-size:12px;color:var(--warn);margin-top:6px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Kết Nối Thiện Nguyện</h1>
+    <p>Nói cho AI biết bạn muốn giúp ai — quyên góp qua MoMo — mỗi khoản tiền được lưu công khai, không ai sửa được.</p>
+    <div class="badges" id="badges"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav>
+    <button class="on" data-tab="give">Quyên góp</button>
+    <button data-tab="trace">Minh bạch dòng tiền</button>
+  </nav>
+
+  <div id="orderBanner"></div>
+
+  <!-- TAB 1: AI + quyên góp -->
+  <section id="tab-give">
+    <div class="card">
+      <div class="ask">
+        <input id="q" placeholder="Ví dụ: Tôi muốn giúp trẻ em bị bệnh tim bẩm sinh" maxlength="500">
+        <button class="btn" id="askBtn">Hỏi AI</button>
+      </div>
+      <div class="chips">
+        <span class="chip">Bé bị tim bẩm sinh cần phẫu thuật</span>
+        <span class="chip">Giúp bé bị hở hàm ếch</span>
+        <span class="chip">Trẻ vùng cao suy dinh dưỡng</span>
+        <span class="chip">Học bổng cho nữ sinh dân tộc</span>
+      </div>
+    </div>
+
+    <div id="aiBox" class="hide">
+      <h2>AI đề xuất cho bạn</h2>
+      <div class="mute" id="aiEngine"></div>
+      <div class="grid" id="aiResults"></div>
+    </div>
+
+    <h2>Tất cả quỹ</h2>
+    <div class="sample" id="sampleNote"></div>
+    <div class="grid" id="funds"></div>
+  </section>
+
+  <!-- TAB 2: minh bạch -->
+  <section id="tab-trace" class="hide">
+    <div class="mute" id="chainInfo" style="margin-top:8px"></div>
+
+    <h2>Tổng hợp theo quỹ</h2>
+    <div class="card"><table>
+      <thead><tr><th>Quỹ</th><th class="num">Đã nhận</th><th class="num">Đã chi</th><th class="num">Số dư</th><th></th></tr></thead>
+      <tbody id="totals"></tbody>
+    </table></div>
+    <div id="summaryBox" class="card hide" style="margin-top:12px">
+      <strong id="summaryTitle"></strong>
+      <div class="summary" id="summaryText"></div>
+    </div>
+
+    <h2>Các khoản quyên góp (tiền vào)</h2>
+    <div class="card"><table>
+      <thead><tr><th>Thời gian</th><th>Quỹ</th><th class="num">Số tiền</th><th>Mã GD MoMo</th><th>Bằng chứng trên chuỗi</th></tr></thead>
+      <tbody id="donations"></tbody>
+    </table></div>
+
+    <h2>Các khoản chi của quỹ (tiền ra)</h2>
+    <div class="card"><table>
+      <thead><tr><th>Thời gian</th><th>Quỹ</th><th class="num">Số tiền</th><th>Mục đích</th><th>Bằng chứng trên chuỗi</th></tr></thead>
+      <tbody id="outs"></tbody>
+    </table></div>
+  </section>
+</main>
+
+<!-- Modal quyên góp -->
+<div class="modal" id="modal">
+  <div class="card">
+    <div class="mute">Quyên góp cho</div>
+    <h3 id="mFund" style="margin:2px 0 0"></h3>
+    <div class="amounts" id="amounts"></div>
+    <input class="field" id="mAmount" type="number" min="1000" step="1000" placeholder="Số tiền khác (VND)">
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn ghost" id="mCancel" style="flex:1">Hủy</button>
+      <button class="btn" id="mPay" style="flex:2">Thanh toán bằng MoMo</button>
+    </div>
+    <div class="mute" id="mErr" style="color:#b91c1c;margin-top:8px"></div>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const vnd = n => Number(n).toLocaleString('vi-VN') + ' đ';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtTime = iso => iso ? new Date(iso).toLocaleString('vi-VN') : '';
+const short = h => h ? h.slice(0, 10) + '…' + h.slice(-6) : '';
+async function api(path, opts = {}) {
+  const r = await fetch(path, {headers: {'Content-Type': 'application/json'}, ...opts});
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.detail ? (typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail)) : r.statusText);
+  return data;
+}
+
+let FUNDS = [], STATUS = {}, current = null, amount = 50000;
+
+// ---------- trạng thái hệ thống
+async function loadStatus() {
+  STATUS = await api('/api/status');
+  const pay = STATUS.payment_mode === 'momo' ? 'MoMo Sandbox' : 'Thanh toán giả lập';
+  const chain = STATUS.chain_mode === 'polygon-amoy' ? 'Polygon Amoy testnet' : 'Blockchain: chưa cấu hình';
+  const aiE = STATUS.ai_engine === 'llm' ? 'AI: LLM' : 'AI: bộ từ khóa (chưa có API key)';
+  $('#badges').innerHTML = [pay, chain, aiE].map(t => `<span class="badge">${t}</span>`).join('');
+  $('#mPay').textContent = STATUS.payment_mode === 'momo' ? 'Thanh toán bằng MoMo' : 'Thanh toán (giả lập)';
+}
+
+// ---------- danh sách quỹ
+function fundCard(f, reason) {
+  return `<div class="card fund">
+    <h3>${esc(f.name)}</h3>
+    <div class="tags">
+      ${f.fields.map(x => `<span class="tag">${esc(x)}</span>`).join('')}
+      ${f.regions.map(x => `<span class="tag">📍 ${esc(x)}</span>`).join('')}
+      ${f.public_statement === true ? '<span class="tag ok">Có công khai sao kê</span>' : f.public_statement === false ? '<span class="tag no">Chưa thấy sao kê công khai</span>' : ''}
+    </div>
+    ${reason ? `<div class="reason">💡 ${esc(reason)}</div>` : ''}
+    <div class="mute">${esc(f.description)}</div>
+    <button class="btn" style="margin-top:12px;width:100%" data-give="${esc(f.id)}">Quyên góp</button>
+  </div>`;
+}
+async function loadFunds() {
+  FUNDS = await api('/api/funds');
+  $('#funds').innerHTML = FUNDS.map(f => fundCard(f)).join('');
+  if (FUNDS.some(f => f.sample)) $('#sampleNote').textContent = '⚠ Đang dùng dữ liệu mẫu (hư cấu) để demo.';
+}
+
+// ---------- AI
+async function ask(text) {
+  const q = (text ?? $('#q').value).trim();
+  if (q.length < 2) return;
+  $('#q').value = q;
+  $('#askBtn').disabled = true; $('#askBtn').textContent = 'AI đang suy nghĩ…';
+  try {
+    const res = await api('/api/recommend', {method: 'POST', body: JSON.stringify({query: q})});
+    $('#aiBox').classList.remove('hide');
+    $('#aiEngine').textContent = res.engine === 'llm' ? 'Đề xuất bởi mô hình ngôn ngữ' : 'Đề xuất theo từ khóa (chế độ dự phòng)';
+    $('#aiResults').innerHTML = res.results.length
+      ? res.results.map(r => fundCard(r.fund, r.reason)).join('')
+      : '<div class="mute">Chưa tìm thấy quỹ phù hợp. Bạn thử mô tả cụ thể hơn: muốn giúp ai, ở đâu?</div>';
+  } catch (e) { alert('Lỗi: ' + e.message); }
+  finally { $('#askBtn').disabled = false; $('#askBtn').textContent = 'Hỏi AI'; }
+}
+$('#askBtn').onclick = () => ask();
+$('#q').onkeydown = e => { if (e.key === 'Enter') ask(); };
+document.querySelectorAll('.chip').forEach(c => c.onclick = () => ask(c.textContent));
+
+// ---------- modal quyên góp
+const PRESETS = [20000, 50000, 100000, 200000, 500000, 1000000];
+function openModal(id) {
+  current = FUNDS.find(f => f.id === id);
+  $('#mFund').textContent = current.name; $('#mErr').textContent = ''; $('#mAmount').value = '';
+  amount = 50000; renderAmounts(); $('#modal').classList.add('open');
+}
+function renderAmounts() {
+  $('#amounts').innerHTML = PRESETS.map(a => `<button class="${a === amount ? 'on' : ''}" data-a="${a}">${(a/1000).toLocaleString('vi-VN')}k</button>`).join('');
+}
+$('#amounts').onclick = e => { const a = e.target.dataset.a; if (a) { amount = +a; $('#mAmount').value = ''; renderAmounts(); } };
+$('#mAmount').oninput = () => { amount = +$('#mAmount').value || 0; renderAmounts(); };
+$('#mCancel').onclick = () => $('#modal').classList.remove('open');
+$('#mPay').onclick = async () => {
+  if (amount < 1000) { $('#mErr').textContent = 'Số tiền tối thiểu 1.000 đ'; return; }
+  $('#mPay').disabled = true;
+  try {
+    const res = await api('/api/donate', {method: 'POST', body: JSON.stringify({fund_id: current.id, amount})});
+    location.href = res.pay_url;
+  } catch (e) { $('#mErr').textContent = e.message; $('#mPay').disabled = false; }
+};
+document.body.addEventListener('click', e => { const id = e.target.dataset.give; if (id) openModal(id); });
+
+// ---------- kết quả sau khi thanh toán
+async function watchOrder(orderId) {
+  const box = $('#orderBanner');
+  for (let i = 0; i < 60; i++) {
+    let o;
+    try { o = await api('/api/orders/' + encodeURIComponent(orderId)); } catch { return; }
+    if (o.status === 'failed') { box.innerHTML = `<div class="banner err">Thanh toán chưa thành công hoặc đã bị hủy.</div>`; return; }
+    if (o.status === 'pending') {
+      box.innerHTML = `<div class="banner wait">Đang chờ MoMo xác nhận thanh toán…</div>`;
+    } else if (o.status === 'paid') {
+      const head = `<strong>Cảm ơn bạn! Đã nhận ${vnd(o.amount)} cho ${esc(o.fund_name)}.</strong><br>Mã giao dịch MoMo: ${esc(o.momo_trans_id)}<br>`;
+      if (o.tx_url) { box.innerHTML = `<div class="banner ok">${head}✅ Đã ghi lên blockchain: <a href="${o.tx_url}" target="_blank" rel="noopener">xem trên Polygonscan</a> — bản ghi này không ai sửa được.</div>`; return; }
+      if (o.chain_error) { box.innerHTML = `<div class="banner err">${head}Ghi blockchain lỗi: ${esc(o.chain_error)}</div>`; return; }
+      if (STATUS.chain_mode !== 'polygon-amoy') { box.innerHTML = `<div class="banner ok">${head}(Blockchain chưa được cấu hình nên khoản này chưa ghi lên chuỗi.)</div>`; return; }
+      box.innerHTML = `<div class="banner wait">${head}Đang ghi lên blockchain…</div>`;
+    } else { box.innerHTML = `<div class="banner err">Trạng thái: ${esc(o.status)}</div>`; return; }
+    await new Promise(r => setTimeout(r, 3000));
+  }
+}
+
+// ---------- tab minh bạch
+async function loadLedger() {
+  const L = await api('/api/ledger');
+  $('#chainInfo').innerHTML = L.chain_mode === 'polygon-amoy'
+    ? `Mọi khoản tiền vào/ra được ghi trên hợp đồng thông minh công khai: <a href="${L.contract_url}" target="_blank" rel="noopener">xem hợp đồng trên Polygonscan</a>.`
+    : 'Blockchain chưa được cấu hình — bảng dưới đây chỉ lấy từ máy chủ.';
+  const link = (url, hash) => url ? `<a href="${url}" target="_blank" rel="noopener">${short(hash)}</a>` : '<span class="mute">chưa ghi</span>';
+  const rows = Object.entries(L.totals);
+  $('#totals').innerHTML = rows.length ? rows.map(([id, t]) => `<tr><td>${esc(t.fund_name)}</td><td class="num">${vnd(t.in)}</td><td class="num">${vnd(t.out)}</td><td class="num">${vnd(t.in - t.out)}</td><td><button class="btn ghost" style="padding:6px 10px;font-size:13px" data-sum="${esc(id)}">AI tóm tắt</button></td></tr>`).join('')
+    : '<tr><td colspan="5" class="mute">Chưa có giao dịch.</td></tr>';
+  $('#donations').innerHTML = L.donations.length ? L.donations.map(d => `<tr><td>${fmtTime(d.time)}</td><td>${esc(d.fund_name)}</td><td class="num">${vnd(d.amount)}</td><td>${esc(d.momo_trans_id)}</td><td>${link(d.tx_url, d.tx_hash)}</td></tr>`).join('')
+    : '<tr><td colspan="5" class="mute">Chưa có khoản quyên góp.</td></tr>';
+  $('#outs').innerHTML = L.disbursements.length ? L.disbursements.map(d => `<tr><td>${fmtTime(d.created_at)}</td><td>${esc(d.fund_name)}</td><td class="num">${vnd(d.amount)}</td><td>${esc(d.purpose)}</td><td>${link(d.tx_url, d.tx_hash)}</td></tr>`).join('')
+    : '<tr><td colspan="5" class="mute">Quỹ chưa công bố khoản chi nào.</td></tr>';
+}
+document.body.addEventListener('click', async e => {
+  const id = e.target.dataset.sum; if (!id) return;
+  const fund = FUNDS.find(f => f.id === id);
+  $('#summaryBox').classList.remove('hide');
+  $('#summaryTitle').textContent = 'AI tóm tắt: ' + (fund ? fund.name : id);
+  $('#summaryText').textContent = 'Đang phân tích…';
+  try { const s = await api(`/api/funds/${encodeURIComponent(id)}/summary`); $('#summaryText').textContent = s.summary; }
+  catch (err) { $('#summaryText').textContent = 'Lỗi: ' + err.message; }
+});
+
+// ---------- tabs
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b));
+  $('#tab-give').classList.toggle('hide', b.dataset.tab !== 'give');
+  $('#tab-trace').classList.toggle('hide', b.dataset.tab !== 'trace');
+  if (b.dataset.tab === 'trace') loadLedger();
+});
+
+(async () => {
+  await loadStatus(); await loadFunds();
+  const order = new URLSearchParams(location.search).get('order');
+  if (order) watchOrder(order);
+})();
+</script>
+</body>
+</html>

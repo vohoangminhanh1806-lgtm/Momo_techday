@@ -1,0 +1,5 @@
+backend/.env
+backend/data/orders.json
+backend/data/orders.tmp
+__pycache__/
+.venv/

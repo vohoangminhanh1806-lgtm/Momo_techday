@@ -1,0 +1,38 @@
+# Sao chép file này thành .env rồi điền giá trị. KHÔNG đưa file .env lên GitHub.
+
+# ---------- URL ----------
+# URL công khai để MoMo gọi IPN về (lấy từ ngrok, ví dụ https://abcd-1-2-3-4.ngrok-free.app)
+PUBLIC_BASE_URL=http://localhost:8000
+# URL trình duyệt mở sau khi thanh toán (chạy trên máy mình thì để localhost)
+APP_BASE_URL=http://localhost:8000
+
+# ---------- MoMo (môi trường TEST) ----------
+# "momo" = gọi MoMo sandbox thật; "simulate" = giả lập (dự phòng khi mạng/MoMo lỗi lúc demo)
+PAYMENT_MODE=simulate
+MOMO_ENDPOINT=https://test-payment.momo.vn/v2/gateway/api/create
+MOMO_REQUEST_TYPE=captureWallet
+# Lấy khóa test trên trang developers.momo.vn (hoặc bộ khóa test công khai trong code mẫu của MoMo)
+MOMO_PARTNER_CODE=
+MOMO_ACCESS_KEY=
+MOMO_SECRET_KEY=
+
+# ---------- Blockchain: Polygon Amoy testnet ----------
+POLYGON_RPC_URL=https://rpc-amoy.polygon.technology
+CHAIN_ID=80002
+EXPLORER_URL=https://amoy.polygonscan.com
+# Khóa riêng của ví TESTNET (tạo ví mới trong MetaMask chỉ để demo, đừng dùng ví có tiền thật)
+PRIVATE_KEY=
+# Điền sau khi chạy: python contracts/deploy.py
+CONTRACT_ADDRESS=
+
+# ---------- AI (API tương thích OpenAI) ----------
+# OpenAI:  LLM_BASE_URL=https://api.openai.com/v1                              LLM_MODEL=gpt-4o-mini
+# Gemini:  LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai  LLM_MODEL=gemini-2.5-flash
+# Groq:    LLM_BASE_URL=https://api.groq.com/openai/v1                          LLM_MODEL=llama-3.3-70b-versatile
+# Để trống LLM_API_KEY thì AI tự dùng bộ đề xuất theo từ khóa.
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_API_KEY=
+LLM_MODEL=gpt-4o-mini
+
+# Mã để quỹ ghi khoản chi qua API /api/disbursements
+ADMIN_TOKEN=doi-ma-nay
