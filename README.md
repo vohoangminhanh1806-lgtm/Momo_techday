@@ -1,5 +1,9 @@
 # Kết Nối Thiện Nguyện — AI × MoMo × Blockchain
 
+**🌐 Xem demo trực tiếp: https://momo-techday.onrender.com**
+
+> Server miễn phí tự "ngủ" khi không có người dùng; lần mở đầu tiên có thể mất khoảng 1 phút.
+
 Demo cho cuộc thi MoMo TechDay 2026.
 
 - Người dùng mô tả mong muốn bằng lời, ví dụ "Bé bị tim bẩm sinh cần phẫu thuật". **AI** đề xuất quỹ phù hợp trong 4 quỹ hỗ trợ trẻ em và nêu lý do.
